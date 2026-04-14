@@ -1,0 +1,29 @@
+# IntelliJ
+.idea/
+*.iml
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend
+backend/target/
+events/target/
+*/target/
+
+# Frontend
+frontend/node_modules/
+events-frontend/node_modules/
+*/node_modules/
+dist/
+build/
+
+# Env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
