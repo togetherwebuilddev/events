@@ -11,5 +11,13 @@ public class MessageConstants {
     public static final String QR_TOKEN_ALREADY_EXISTS = "registration.qr.exists";
     public static final String EVENT_ID_REQUIRED = "registration.eventId.required";
     public static final String GUEST_ID_REQUIRED = "registration.guestId.required";
+    public static final String CHECKIN_TOKEN_REQUIRED = "checkin.token.required";
+    public static final String CHECKIN_REGISTRATION_ID_REQUIRED = "checkin.registrationId.required";
+    public static final String CHECKIN_MANUAL_REASON_REQUIRED = "checkin.manualReason.required";
+
+    public static final String CHECKIN_INVALID_TOKEN = "checkin.invalid.token";
+    public static final String CHECKIN_ALREADY_COMPLETED = "checkin.already.completed";
+    public static final String CHECKIN_SUCCESS = "checkin.success";
+    public static final String CHECKIN_MANUAL_SUCCESS = "checkin.manual.success";
 
 }
