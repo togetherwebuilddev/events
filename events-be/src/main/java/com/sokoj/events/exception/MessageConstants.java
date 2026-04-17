@@ -14,10 +14,15 @@ public class MessageConstants {
     public static final String CHECKIN_TOKEN_REQUIRED = "checkin.token.required";
     public static final String CHECKIN_REGISTRATION_ID_REQUIRED = "checkin.registrationId.required";
     public static final String CHECKIN_MANUAL_REASON_REQUIRED = "checkin.manualReason.required";
-
     public static final String CHECKIN_INVALID_TOKEN = "checkin.invalid.token";
     public static final String CHECKIN_ALREADY_COMPLETED = "checkin.already.completed";
     public static final String CHECKIN_SUCCESS = "checkin.success";
     public static final String CHECKIN_MANUAL_SUCCESS = "checkin.manual.success";
+    public static final String EMAIL_LOG_NOT_FOUND = "email.log.notfound";
+    public static final String EMAIL_REGISTRATION_ID_REQUIRED = "email.registrationId.required";
+    public static final String EMAIL_SEND_SUCCESS = "email.send.success";
+    public static final String EMAIL_SEND_FAILED = "email.send.failed";
+    public static final String EMAIL_GUEST_EMAIL_MISSING = "email.guest.email.missing";
+    public static final String EMAIL_PREVIEW_NOT_FOUND = "email.preview.notfound";
 
 }
