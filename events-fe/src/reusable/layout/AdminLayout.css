@@ -1,0 +1,136 @@
+.admin-layout {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(29, 78, 216, 0.12), transparent 26%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.admin-layout__appbar {
+  background-color: rgba(248, 250, 252, 0.92);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid #d8e1ea;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-layout__toolbar {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  min-height: 72px;
+  padding-bottom: 12px;
+  padding-top: 12px;
+}
+
+.admin-layout__menu-button {
+  color: #174f79;
+  display: none;
+}
+
+.admin-layout__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.admin-layout__eyebrow {
+  color: #6b7b8c;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+.admin-layout__title {
+  color: #102a43;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.admin-layout__nav {
+  background-color: rgba(219, 228, 238, 0.55);
+  border: 1px solid #d7e1eb;
+  border-radius: 999px;
+  box-sizing: border-box;
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  padding: 6px;
+}
+
+.admin-layout__nav-button {
+  border-radius: 999px;
+  color: #35516b;
+  font-weight: 700;
+  min-height: 42px;
+  padding-left: 18px;
+  padding-right: 18px;
+  text-transform: none;
+}
+
+.admin-layout__nav-button:hover {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+.admin-layout__nav-button--active {
+  background: linear-gradient(135deg, #174f79 0%, #2a6c96 100%);
+  box-shadow: 0 10px 24px rgba(23, 79, 121, 0.18);
+  color: #ffffff;
+}
+
+.admin-layout__nav-button--active:hover {
+  background: linear-gradient(135deg, #174f79 0%, #2a6c96 100%);
+}
+
+.admin-layout__container {
+  padding-bottom: 32px;
+  padding-top: 32px;
+}
+
+.admin-layout__content {
+  padding: 24px;
+}
+
+.admin-layout__drawer .MuiDrawer-paper {
+  background: linear-gradient(180deg, #f8fafc 0%, #eef4f9 100%);
+  border-right: 1px solid #d8e1ea;
+  width: min(82vw, 320px);
+}
+
+.admin-layout__drawer-content {
+  padding: 22px 16px;
+}
+
+@media (max-width: 600px) {
+  .admin-layout__content {
+    padding: 16px;
+  }
+
+  .admin-layout__toolbar {
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 64px;
+  }
+
+  .admin-layout__menu-button {
+    display: inline-flex;
+  }
+
+  .admin-layout__brand {
+    flex: 1;
+  }
+
+  .admin-layout__nav {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .admin-layout__nav-button {
+    min-width: 0;
+    width: 100%;
+  }
+}

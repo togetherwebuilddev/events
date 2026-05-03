@@ -6,4 +6,33 @@ public class MessageConstants {
     public static final String VALIDATION_ERROR = "validation.error";
     public static final String INTERNAL_SERVER_ERROR = "error.internal";
     public static final String GUEST_NOT_FOUND = "guest.notfound";
+    public static final String GUEST_DELETE_BLOCKED_HISTORY = "guest.delete.blocked.history";
+    public static final String REGISTRATION_NOT_FOUND = "registration.notfound";
+    public static final String REGISTRATION_ALREADY_EXISTS = "registration.already.exists";
+    public static final String REGISTRATION_REMOVED_FROM_EVENT = "registration.removed.from.event";
+    public static final String QR_TOKEN_ALREADY_EXISTS = "registration.qr.exists";
+    public static final String EVENT_ID_REQUIRED = "registration.eventId.required";
+    public static final String GUEST_ID_REQUIRED = "registration.guestId.required";
+    public static final String CHECKIN_TOKEN_REQUIRED = "checkin.token.required";
+    public static final String CHECKIN_REGISTRATION_ID_REQUIRED = "checkin.registrationId.required";
+    public static final String CHECKIN_MANUAL_REASON_REQUIRED = "checkin.manualReason.required";
+    public static final String CHECKIN_INVALID_TOKEN = "checkin.invalid.token";
+    public static final String CHECKIN_ALREADY_COMPLETED = "checkin.already.completed";
+    public static final String CHECKIN_SUCCESS = "checkin.success";
+    public static final String CHECKIN_MANUAL_SUCCESS = "checkin.manual.success";
+    public static final String EMAIL_LOG_NOT_FOUND = "email.log.notfound";
+    public static final String EMAIL_REGISTRATION_ID_REQUIRED = "email.registrationId.required";
+    public static final String EMAIL_SEND_SUCCESS = "email.send.success";
+    public static final String EMAIL_SEND_FAILED = "email.send.failed";
+    public static final String EMAIL_ALREADY_SENT = "email.already.sent";
+    public static final String EMAIL_BULK_SEND_SUCCESS = "email.bulk.send.success";
+    public static final String EMAIL_BULK_SEND_PARTIAL = "email.bulk.send.partial";
+    public static final String EMAIL_REGISTRATION_IDS_REQUIRED = "email.registrationIds.required";
+    public static final String EMAIL_GUEST_EMAIL_MISSING = "email.guest.email.missing";
+    public static final String EMAIL_PREVIEW_NOT_FOUND = "email.preview.notfound";
+    public static final String AUTH_EMAIL_ALREADY_EXISTS = "auth.email.exists";
+    public static final String AUTH_USER_NOT_FOUND = "auth.user.notfound";
+    public static final String AUTH_UNAUTHORIZED = "auth.unauthorized";
+    public static final String AUTH_FORBIDDEN = "auth.forbidden";
+
 }
