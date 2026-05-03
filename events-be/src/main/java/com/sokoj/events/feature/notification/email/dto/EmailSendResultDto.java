@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 public class EmailSendResultDto {
 
     private boolean success;
+    private boolean skipped;
     private String message;
 
     private Long emailLogId;

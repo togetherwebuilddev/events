@@ -43,9 +43,11 @@ public class RegistrationMapper {
 
         dto.setInvitationSentAt(registration.getInvitationSentAt());
         dto.setCheckedInAt(registration.getCheckedInAt());
+        dto.setInvitationErrorMessage(null);
 
         dto.setCreatedAt(registration.getCreatedAt());
         dto.setUpdatedAt(registration.getUpdatedAt());
+        dto.setCanceledAt(registration.getCanceledAt());
 
         return dto;
     }
@@ -73,11 +75,13 @@ public class RegistrationMapper {
         dto.setCheckedInAt(registration.getCheckedInAt());
         dto.setCheckedInBy(registration.getCheckedInBy());
         dto.setManualCheckInReason(registration.getManualCheckInReason());
+        dto.setInvitationErrorMessage(null);
 
         dto.setNotes(registration.getNotes());
 
         dto.setCreatedAt(registration.getCreatedAt());
         dto.setUpdatedAt(registration.getUpdatedAt());
+        dto.setCanceledAt(registration.getCanceledAt());
 
         return dto;
     }

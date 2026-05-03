@@ -1,0 +1,201 @@
+.event-registrations-page__header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.event-registrations-page__eyebrow {
+  color: #6b7b8c;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+.event-registrations-page__title {
+  color: #102a43;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.event-registrations-page__subtitle {
+  margin-top: 8px;
+  max-width: 760px;
+}
+
+.event-registrations-page__header-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.event-registrations-page__summary {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.event-registrations-page__summary-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.98) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+  padding: 20px;
+}
+
+.event-registrations-page__scanner {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 253, 0.98) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+}
+
+.event-registrations-page__scanner-form {
+  align-items: stretch;
+}
+
+.event-registrations-page__scanner-camera-action {
+  display: flex;
+}
+
+.event-registrations-page__scanner-camera-action .MuiButton-root {
+  min-width: 220px;
+}
+
+.event-registrations-page__filters {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.event-registrations-page__bulk-actions {
+  align-items: flex-start;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 250, 255, 0.98) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.event-registrations-page__bulk-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.event-registrations-page__search {
+  flex: 1;
+  max-width: 420px;
+}
+
+.event-registrations-page__status-filter {
+  flex: 1;
+  min-width: 280px;
+}
+
+.event-registrations-page__status-filter .MuiInputBase-root {
+  background-color: #ffffff;
+  border-radius: 14px;
+}
+
+.event-registrations-page__status-filter .MuiOutlinedInput-notchedOutline {
+  border-color: #cfdbe6;
+}
+
+.event-registrations-page__status-filter .MuiInputLabel-root {
+  color: #5d7286;
+  font-weight: 700;
+}
+
+.event-registrations-page__status-filter .MuiSelect-select {
+  color: #16324a;
+  font-weight: 600;
+}
+
+.event-registrations-page__table-wrapper {
+  overflow: hidden;
+}
+
+.event-registrations-page__surface {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 251, 255, 0.96) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+}
+
+.event-registrations-page__table-wrapper .MuiTable-root {
+  min-width: 1040px;
+}
+
+.event-registrations-page__table-wrapper .MuiTableHead-root .MuiTableCell-root {
+  background-color: #f3f7fb;
+  color: #5d7286;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.event-registrations-page__table-wrapper .MuiTableBody-root .MuiTableRow-root:hover {
+  background-color: #f8fbff;
+}
+
+.event-registrations-page__table-wrapper .MuiTablePagination-root {
+  border-top: 1px solid #e0e8f0;
+}
+
+@media (max-width: 900px) {
+  .event-registrations-page__summary {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .event-registrations-page__header,
+  .event-registrations-page__filters,
+  .event-registrations-page__bulk-actions {
+    flex-direction: column;
+  }
+
+  .event-registrations-page__section-scanner {
+    order: 2;
+  }
+
+  .event-registrations-page__section-filters {
+    order: 3;
+  }
+
+  .event-registrations-page__section-table {
+    order: 4;
+  }
+
+  .event-registrations-page__section-summary {
+    order: 5;
+  }
+
+  .event-registrations-page__header-actions,
+  .event-registrations-page__bulk-buttons {
+    width: 100%;
+  }
+
+  .event-registrations-page__filters {
+    padding: 16px;
+  }
+
+  .event-registrations-page__scanner-camera-action .MuiButton-root,
+  .event-registrations-page__search,
+  .event-registrations-page__status-filter {
+    max-width: 100%;
+    width: 100%;
+  }
+}

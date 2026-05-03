@@ -25,7 +25,9 @@ public class RegistrationAdminListDto {
 
     private LocalDateTime invitationSentAt;
     private LocalDateTime checkedInAt;
+    private String invitationErrorMessage;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime canceledAt;
 }

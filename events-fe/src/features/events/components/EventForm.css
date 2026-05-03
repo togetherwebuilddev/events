@@ -1,0 +1,8 @@
+.event-form {
+  width: 100%;
+}
+
+.event-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}

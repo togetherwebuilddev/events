@@ -31,7 +31,7 @@ public class CheckInService {
 
     @Transactional
     public CheckInResponseDto scan(CheckInScanRequestDto request) {
-        EventRegistration registration = registrationRepository.findByQrToken(request.getToken())
+        EventRegistration registration = registrationRepository.findByQrTokenForUpdate(request.getToken())
                 .orElse(null);
 
         if (registration == null) {
@@ -41,6 +41,15 @@ public class CheckInService {
             response.setResult(ScanResult.INVALID_TOKEN);
             response.setMessage(MessageConstants.CHECKIN_INVALID_TOKEN);
             return response;
+        }
+
+        if (registration.getCanceledAt() != null) {
+            return checkInMapper.toResponseDto(
+                    false,
+                    ScanResult.CANCELED_REGISTRATION,
+                    "Prijava za ovaj dogadjaj je otkazana.",
+                    registration
+            );
         }
 
         if (registration.getAttendanceStatus() == AttendanceStatus.CHECKED_IN
@@ -90,8 +99,17 @@ public class CheckInService {
 
     @Transactional
     public CheckInResponseDto manual(CheckInManualRequestDto request) {
-        EventRegistration registration = registrationRepository.findById(request.getRegistrationId())
+        EventRegistration registration = registrationRepository.findByIdForUpdate(request.getRegistrationId())
                 .orElseThrow(() -> new NotFoundException(MessageConstants.REGISTRATION_NOT_FOUND));
+
+        if (registration.getCanceledAt() != null) {
+            return checkInMapper.toResponseDto(
+                    false,
+                    ScanResult.CANCELED_REGISTRATION,
+                    "Prijava za ovaj dogadjaj je otkazana.",
+                    registration
+            );
+        }
 
         if (registration.getAttendanceStatus() == AttendanceStatus.CHECKED_IN
                 || registration.getAttendanceStatus() == AttendanceStatus.MANUAL_CHECKED_IN) {

@@ -1,0 +1,29 @@
+.event-registrations-table__name {
+  color: #16324a;
+  font-weight: 600;
+}
+
+.event-registrations-table__actions {
+  justify-content: flex-end;
+}
+
+.event-registrations-table__qr {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.event-registrations-table__card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 253, 0.98) 100%);
+  border-color: #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 32px rgba(14, 42, 67, 0.06);
+  padding: 18px;
+}
+
+.event-registrations-table__chip-row {
+  flex-wrap: wrap;
+}
+
+.event-registrations-table__header-row {
+  align-items: flex-start;
+  justify-content: space-between;
+}

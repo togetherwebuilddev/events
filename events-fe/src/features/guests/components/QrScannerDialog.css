@@ -1,0 +1,45 @@
+.qr-scanner-dialog .MuiDialog-paper {
+  border-radius: 20px;
+}
+
+.qr-scanner-dialog__content {
+  padding-top: 8px;
+}
+
+.qr-scanner-dialog__viewport {
+  align-items: center;
+  aspect-ratio: 3 / 4;
+  background:
+    radial-gradient(circle at top, rgba(46, 101, 183, 0.22), transparent 48%),
+    linear-gradient(180deg, #0f2746 0%, #1b3d68 100%);
+  border: 1px solid #c9d7e8;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.qr-scanner-dialog__video {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.qr-scanner-dialog__frame {
+  border: 3px solid rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 0 0 9999px rgba(8, 19, 36, 0.22);
+  height: min(62vw, 230px);
+  max-height: 230px;
+  max-width: 230px;
+  pointer-events: none;
+  position: absolute;
+  width: min(62vw, 230px);
+}
+
+@media (max-width: 600px) {
+  .qr-scanner-dialog__viewport {
+    aspect-ratio: 4 / 5;
+  }
+}

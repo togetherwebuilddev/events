@@ -30,12 +30,14 @@ public class EmailMapper {
 
     public EmailSendResultDto toSendResultDto(
             boolean success,
+            boolean skipped,
             String message,
             EmailLog emailLog
     ) {
         EmailSendResultDto dto = new EmailSendResultDto();
 
         dto.setSuccess(success);
+        dto.setSkipped(skipped);
         dto.setMessage(message);
 
         dto.setEmailLogId(emailLog.getId());
