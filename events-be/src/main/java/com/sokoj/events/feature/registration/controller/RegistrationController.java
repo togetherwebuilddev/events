@@ -7,6 +7,7 @@ import com.sokoj.events.feature.registration.dto.RegistrationUpdateRequestDto;
 import com.sokoj.events.feature.registration.service.RegistrationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,6 +40,12 @@ public class RegistrationController {
             @Valid @RequestBody RegistrationUpdateRequestDto request
     ) {
         return registrationService.update(id, request);
+    }
+
+    @PostMapping("/{id}/cancel")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cancel(@PathVariable Long id) {
+        registrationService.cancel(id);
     }
 
     @DeleteMapping("/{id}")

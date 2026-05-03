@@ -1,0 +1,46 @@
+.guests-table__name {
+  color: #16324a;
+  font-weight: 600;
+}
+
+.guests-table__primary-value {
+  color: #2f475b;
+}
+
+.guests-table__row:hover {
+  background-color: #f8fbff;
+}
+
+.guests-table__actions {
+  justify-content: flex-end;
+}
+
+.guests-table__actions .MuiChip-root {
+  font-weight: 600;
+}
+
+.guests-table__icon-button {
+  background-color: #ffffff;
+  border: 1px solid #d8e3ee;
+  border-radius: 10px;
+  color: #255e91;
+}
+
+.guests-table__icon-button:hover {
+  background-color: #eef5fb;
+  border-color: #b6cade;
+}
+
+.guests-table__icon-button--danger {
+  border-color: #f1d3d3;
+}
+
+.guests-table__icon-button--danger:hover {
+  background-color: #fff3f3;
+  border-color: #e8b7b7;
+}
+
+.guests-table__error-text {
+  margin-top: 6px;
+  max-width: 260px;
+}

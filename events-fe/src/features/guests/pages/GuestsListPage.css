@@ -1,0 +1,135 @@
+.guests-list-page__header {
+  align-items: flex-start;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.guests-list-page__eyebrow {
+  color: #6b7b8c;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  line-height: 1;
+}
+
+.guests-list-page__title {
+  color: #102a43;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.guests-list-page__subtitle {
+  margin-top: 8px;
+  max-width: 760px;
+}
+
+.guests-list-page__surface {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(248, 251, 255, 0.96) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+}
+
+.guests-list-page__filters {
+  display: flex;
+  padding: 18px 20px;
+}
+
+.guests-list-page__events-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.guests-list-page__event-card {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(244, 248, 252, 0.98) 100%);
+  border-color: #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 32px rgba(14, 42, 67, 0.06);
+  padding: 22px;
+}
+
+.guests-list-page__search {
+  flex: 1;
+  max-width: 420px;
+}
+
+.guests-list-page__table-wrapper {
+  overflow: hidden;
+}
+
+.guests-list-page__event-actions {
+  align-items: flex-start;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 249, 253, 0.98) 100%);
+  border: 1px solid #d8e1ea;
+  border-radius: 20px;
+  box-shadow: 0 14px 34px rgba(15, 42, 67, 0.06);
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 16px 20px;
+}
+
+.guests-list-page__event-action-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: flex-end;
+  max-width: 760px;
+}
+
+.guests-list-page__event-action-buttons .MuiButton-root {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.guests-list-page__table-wrapper .MuiTable-root {
+  min-width: 980px;
+}
+
+.guests-list-page__table-wrapper .MuiTableHead-root .MuiTableCell-root {
+  background-color: #f3f7fb;
+  color: #5d7286;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guests-list-page__table-wrapper .MuiTableBody-root .MuiTableRow-root:hover {
+  background-color: #f8fbff;
+}
+
+.guests-list-page__table-wrapper .MuiTablePagination-root {
+  border-top: 1px solid #e0e8f0;
+}
+
+@media (max-width: 600px) {
+  .guests-list-page__header {
+    flex-direction: column;
+  }
+
+  .guests-list-page__event-actions {
+    flex-direction: column;
+  }
+
+  .guests-list-page__event-action-buttons {
+    align-items: stretch;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .guests-list-page__event-action-buttons .MuiButton-root {
+    width: 100%;
+  }
+
+  .guests-list-page__filters {
+    padding: 16px;
+  }
+
+  .guests-list-page__search {
+    max-width: 100%;
+  }
+}

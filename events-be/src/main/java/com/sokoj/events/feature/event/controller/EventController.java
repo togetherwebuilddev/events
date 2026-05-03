@@ -1,5 +1,6 @@
 package com.sokoj.events.feature.event.controller;
 
+import com.sokoj.events.common.dto.PageResponseDto;
 import com.sokoj.events.feature.event.dto.EventAdminDetailsDto;
 import com.sokoj.events.feature.event.dto.EventAdminListDto;
 import com.sokoj.events.feature.event.dto.EventCreateRequestDto;
@@ -24,8 +25,13 @@ public class EventController {
     }
 
     @GetMapping
-    public List<EventAdminListDto> findAll() {
-        return eventService.findAll();
+    public PageResponseDto<EventAdminListDto> findAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction
+    ) {
+        return eventService.findAll(page, size, sort, direction);
     }
 
     @GetMapping("/{id}")

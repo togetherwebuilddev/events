@@ -14,5 +14,8 @@ public class SendInvitationRequestDto {
     @Size(max = 255, message = "email.subject.size")
     private String subject;
 
+    @Size(max = 5000, message = "email.body.size")
+    private String body;
+
     private EmailType emailType;
 }

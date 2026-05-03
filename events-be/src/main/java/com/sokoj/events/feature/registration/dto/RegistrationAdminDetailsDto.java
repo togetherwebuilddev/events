@@ -29,9 +29,11 @@ public class RegistrationAdminDetailsDto {
     private LocalDateTime checkedInAt;
     private String checkedInBy;
     private String manualCheckInReason;
+    private String invitationErrorMessage;
 
     private String notes;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private LocalDateTime canceledAt;
 }
