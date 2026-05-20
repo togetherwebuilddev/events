@@ -19,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -38,33 +37,46 @@ public class SecurityConfig {
         http
                 .cors(cors -> {
                 })
-                .csrf(csrf -> csrf
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-                        .ignoringRequestMatchers(
-                                "/api/auth/login",
-                                "/api/auth/register",
-                                "/api/admin/**"
-                        )
-                )
+
+                // TEMPORARY for Railway/test environment.
+                // This removes CSRF as a cause of 403 while we stabilize admin CRUD.
+                .csrf(csrf -> csrf.disable())
+
                 .securityContext(security -> security
                         .securityContextRepository(securityContextRepository())
                 )
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
+
                 .userDetailsService(authUserDetailsService)
                 .authenticationProvider(authenticationProvider())
+
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
+
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/csrf", "/api/auth/login", "/api/auth/register").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/admin/events/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/admin/registrations/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/checkin/manual", "/api/checkin/scan").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.GET, "/api/checkin/logs").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        .requestMatchers(
+                                "/api/auth/csrf",
+                                "/api/auth/login",
+                                "/api/auth/register",
+                                "/api/auth/logout"
+                        ).permitAll()
+
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers("/api/checkin/manual", "/api/checkin/scan")
+                        .hasAnyRole("ADMIN", "USER")
+
+                        .requestMatchers(HttpMethod.GET, "/api/checkin/logs")
+                        .hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
+
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint((request, response, authException) ->
                                 writeError(response, HttpServletResponse.SC_UNAUTHORIZED, MessageConstants.AUTH_UNAUTHORIZED))
@@ -105,10 +117,13 @@ public class SecurityConfig {
     private void writeError(HttpServletResponse response, int status, String message) throws IOException {
         response.setStatus(status);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
         ApiError error = new ApiError(status, message, LocalDateTime.now(), null);
+
         String body = """
                 {"status":%d,"message":"%s","timestamp":"%s","fieldErrors":null}
                 """.formatted(error.getStatus(), error.getMessage(), error.getTimestamp());
+
         response.getWriter().write(body);
     }
 }
