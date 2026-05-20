@@ -35,6 +35,7 @@ export function EventsListPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const debouncedSearchTerm = useDebouncedValue(searchTerm);
@@ -48,16 +49,32 @@ export function EventsListPage() {
       try {
         setIsLoading(true);
         setError(null);
-        const [response, registrations] = await Promise.all([
+        setWarning(null);
+
+        const [eventsResult, registrationsResult] = await Promise.allSettled([
           eventsApi.getEvents(page, rowsPerPage, debouncedSearchTerm),
           guestsApi.getAllRegistrations(),
         ]);
-        const countsByEventId = registrations.reduce<Record<number, number>>((acc, registration) => {
-          if (!registration.canceledAt) {
-            acc[registration.eventId] = (acc[registration.eventId] ?? 0) + 1;
-          }
-          return acc;
-        }, {});
+
+        if (eventsResult.status === 'rejected') {
+          throw eventsResult.reason;
+        }
+
+        const response = eventsResult.value;
+        const countsByEventId =
+          registrationsResult.status === 'fulfilled'
+            ? registrationsResult.value.reduce<Record<number, number>>((acc, registration) => {
+                if (!registration.canceledAt) {
+                  acc[registration.eventId] = (acc[registration.eventId] ?? 0) + 1;
+                }
+                return acc;
+              }, {})
+            : {};
+
+        if (registrationsResult.status === 'rejected') {
+          setWarning('Dogadjaji su ucitani, ali broj prijavljenih gostiju trenutno nije dostupan.');
+        }
+
         setEvents(
           response.items.map((event) => ({
             ...event,
@@ -159,6 +176,7 @@ export function EventsListPage() {
       </Box>
 
       {error ? <ErrorAlert message={error} /> : null}
+      {warning ? <Alert severity="warning">{warning}</Alert> : null}
       {deleteError ? <Alert severity="error">{deleteError}</Alert> : null}
 
       {!error && events.length === 0 ? (

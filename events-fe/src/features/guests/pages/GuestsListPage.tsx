@@ -152,6 +152,7 @@ export function GuestsListPage() {
   const [eventSearchTerm, setEventSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -196,18 +197,51 @@ export function GuestsListPage() {
       try {
         setIsLoading(true);
         setError(null);
-        const [eventsResponse, guestsResponse, registrationsResponse, selectedEventResponse] =
-          await Promise.all([
+        setWarning(null);
+
+        const [eventsResult, guestsResult, registrationsResult, selectedEventResult] =
+          await Promise.allSettled([
             eventsApi.getEvents(0, 100, debouncedEventSearchTerm),
             guestsApi.getGuestOptions(),
             guestsApi.getAllRegistrations(),
             eventId ? eventsApi.getEvent(eventId) : Promise.resolve(null),
           ]);
 
-        setEvents(eventsResponse.items);
-        setAllGuests(guestsResponse);
-        setRegistrations(registrationsResponse);
-        setEvent(selectedEventResponse);
+        if (eventsResult.status === 'rejected') {
+          throw eventsResult.reason;
+        }
+
+        setEvents(eventsResult.value.items);
+
+        if (guestsResult.status === 'fulfilled') {
+          setAllGuests(guestsResult.value);
+        } else {
+          setAllGuests([]);
+        }
+
+        if (registrationsResult.status === 'fulfilled') {
+          setRegistrations(registrationsResult.value);
+        } else {
+          setRegistrations([]);
+        }
+
+        if (selectedEventResult.status === 'rejected') {
+          throw selectedEventResult.reason;
+        }
+
+        setEvent(selectedEventResult.value);
+
+        const warningMessages: string[] = [];
+
+        if (guestsResult.status === 'rejected') {
+          warningMessages.push('Lista gostiju trenutno nije dostupna.');
+        }
+
+        if (registrationsResult.status === 'rejected') {
+          warningMessages.push('Prijave za dogadjaje trenutno nisu dostupne.');
+        }
+
+        setWarning(warningMessages.length > 0 ? warningMessages.join(' ') : null);
       } catch (loadError) {
         setError(mapKnownApiError(loadError, 'Neuspesno ucitavanje gostiju i dogadjaja.'));
       } finally {
@@ -664,6 +698,7 @@ export function GuestsListPage() {
         </Box>
 
         {error ? <ErrorAlert message={error} /> : null}
+        {warning ? <Alert severity="warning">{warning}</Alert> : null}
         {event ? (
           <Box className="guests-list-page__event-actions">
             <Box>
