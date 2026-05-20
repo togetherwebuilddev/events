@@ -2,31 +2,13 @@ import { Alert, Box, Button, Paper, Stack, TextField, Typography } from '@mui/ma
 import { ChangeEvent, FormEvent, useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { getApiErrorMessage } from '../../../api/utils/getApiErrorMessage';
 import './AuthPage.css';
 
 type LoginFormState = {
   email: string;
   password: string;
 };
-
-function getApiErrorMessage(error: unknown, fallbackMessage: string) {
-  const apiMessage =
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    typeof (error as { response?: unknown }).response === 'object' &&
-    (error as { response?: { data?: { message?: unknown } } }).response?.data &&
-    typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message ===
-      'string'
-      ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-      : null;
-
-  if (apiMessage === 'auth.unauthorized') {
-    return 'Neispravni kredencijali.';
-  }
-
-  return fallbackMessage;
-}
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -49,7 +31,11 @@ export function LoginPage() {
       await login(form);
       navigate('/admin/events', { replace: true });
     } catch (submitError) {
-      setError(getApiErrorMessage(submitError, 'Prijava nije uspela.'));
+      setError(
+        getApiErrorMessage(submitError, 'Prijava nije uspela.', {
+          'auth.unauthorized': 'Neispravni kredencijali.',
+        })
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -3,29 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { EventForm } from '../components/EventForm';
 import { eventsApi } from '../api/eventsApi';
 import { CreateEventRequest, EventFormValues } from '../types/event';
-
-function getApiErrorMessage(error: unknown, fallbackMessage: string) {
-  const apiMessage =
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    typeof (error as { response?: unknown }).response === 'object' &&
-    (error as { response?: { data?: { message?: unknown } } }).response?.data &&
-    typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message ===
-      'string'
-      ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-      : null;
-
-  if (apiMessage === 'event.slug.exists') {
-    return 'Dogadjaj sa ovim slug-om vec postoji.';
-  }
-
-  if (apiMessage) {
-    return apiMessage;
-  }
-
-  return fallbackMessage;
-}
+import { getApiErrorMessage } from '../../../api/utils/getApiErrorMessage';
 
 function mapFormValuesToRequest(values: EventFormValues): CreateEventRequest {
   return {
@@ -53,7 +31,11 @@ export function EventCreatePage() {
       await eventsApi.createEvent(mapFormValuesToRequest(values));
       navigate('/admin/events');
     } catch (error) {
-      setSubmitError(getApiErrorMessage(error, 'Cuvanje dogadjaja nije uspelo.'));
+      setSubmitError(
+        getApiErrorMessage(error, 'Cuvanje dogadjaja nije uspelo.', {
+          'event.slug.exists': 'Dogadjaj sa ovim slug-om vec postoji.',
+        })
+      );
     } finally {
       setIsSubmitting(false);
     }

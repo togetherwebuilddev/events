@@ -87,6 +87,7 @@ export interface InvitationSendResultDto {
   subject?: string | null;
   status?: string | null;
   sentAt?: string | null;
+  errorMessage?: string | null;
 }
 
 export interface BulkInvitationSendResultDto {

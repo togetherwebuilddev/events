@@ -19,6 +19,7 @@ import { useAuth } from '../../auth/context/AuthContext';
 import { EmptyState } from '../../../reusable/table/EmptyState';
 import { ErrorAlert } from '../../../reusable/feedback/ErrorAlert';
 import { LoadingState } from '../../../reusable/feedback/LoadingState';
+import { getApiErrorMessage } from '../../../api/utils/getApiErrorMessage';
 import './EventsListPage.css';
 
 const DEFAULT_PAGE = 0;
@@ -65,7 +66,7 @@ export function EventsListPage() {
         );
         setTotalItems(response.totalItems);
       } catch (loadError) {
-        setError('Neuspesno ucitavanje dogadjaja.');
+        setError(getApiErrorMessage(loadError, 'Neuspesno ucitavanje dogadjaja.'));
       } finally {
         setIsLoading(false);
       }

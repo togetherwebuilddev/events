@@ -5,29 +5,7 @@ import { eventsApi } from '../api/eventsApi';
 import { EventDto, EventFormValues, UpdateEventRequest } from '../types/event';
 import { ErrorAlert } from '../../../reusable/feedback/ErrorAlert';
 import { LoadingState } from '../../../reusable/feedback/LoadingState';
-
-function getApiErrorMessage(error: unknown, fallbackMessage: string) {
-  const apiMessage =
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    typeof (error as { response?: unknown }).response === 'object' &&
-    (error as { response?: { data?: { message?: unknown } } }).response?.data &&
-    typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message ===
-      'string'
-      ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-      : null;
-
-  if (apiMessage === 'event.slug.exists') {
-    return 'Dogadjaj sa ovim slug-om vec postoji.';
-  }
-
-  if (apiMessage) {
-    return apiMessage;
-  }
-
-  return fallbackMessage;
-}
+import { getApiErrorMessage } from '../../../api/utils/getApiErrorMessage';
 
 function mapFormValuesToRequest(values: EventFormValues): UpdateEventRequest {
   return {
@@ -66,7 +44,7 @@ export function EventEditPage() {
         const response = await eventsApi.getEvent(id);
         setEvent(response);
       } catch (error) {
-        setLoadError('Neuspesno ucitavanje dogadjaja.');
+        setLoadError(getApiErrorMessage(error, 'Neuspesno ucitavanje dogadjaja.'));
       } finally {
         setIsLoading(false);
       }
@@ -86,7 +64,11 @@ export function EventEditPage() {
       await eventsApi.updateEvent(id, mapFormValuesToRequest(values));
       navigate('/admin/events');
     } catch (error) {
-      setSubmitError(getApiErrorMessage(error, 'Izmena dogadjaja nije uspela.'));
+      setSubmitError(
+        getApiErrorMessage(error, 'Izmena dogadjaja nije uspela.', {
+          'event.slug.exists': 'Dogadjaj sa ovim slug-om vec postoji.',
+        })
+      );
     } finally {
       setIsSubmitting(false);
     }

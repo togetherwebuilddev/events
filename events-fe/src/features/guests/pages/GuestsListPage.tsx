@@ -30,6 +30,7 @@ import { useDebouncedValue } from '../../../hooks/useDebouncedValue';
 import { ErrorAlert } from '../../../reusable/feedback/ErrorAlert';
 import { LoadingState } from '../../../reusable/feedback/LoadingState';
 import { EmptyState } from '../../../reusable/table/EmptyState';
+import { getApiErrorMessage } from '../../../api/utils/getApiErrorMessage';
 import './GuestsListPage.css';
 
 const DEFAULT_PAGE = 0;
@@ -56,35 +57,13 @@ function paginateGuests(guests: GuestDto[], page: number, size: number) {
   };
 }
 
-function getApiErrorMessage(error: unknown, fallbackMessage: string) {
-  const apiMessage =
-    typeof error === 'object' &&
-    error !== null &&
-    'response' in error &&
-    typeof (error as { response?: unknown }).response === 'object' &&
-    (error as { response?: { data?: { message?: unknown } } }).response?.data &&
-    typeof (error as { response?: { data?: { message?: unknown } } }).response?.data?.message ===
-      'string'
-      ? (error as { response?: { data?: { message?: string } } }).response?.data?.message
-      : null;
-
-  if (apiMessage === 'guest.delete.blocked.history') {
-    return 'Gost ima istoriju prijava i ne moze biti obrisan iz baze.';
-  }
-
-  if (apiMessage === 'registration.already.exists') {
-    return 'Gost je vec prijavljen na ovaj dogadjaj.';
-  }
-
-  if (apiMessage === 'guest.notfound') {
-    return 'Gost nije pronadjen.';
-  }
-
-  if (apiMessage === 'registration.notfound') {
-    return 'Prijava za dogadjaj nije pronadjena.';
-  }
-
-  return fallbackMessage;
+function mapKnownApiError(error: unknown, fallbackMessage: string) {
+  return getApiErrorMessage(error, fallbackMessage, {
+    'guest.delete.blocked.history': 'Gost ima istoriju prijava i ne moze biti obrisan iz baze.',
+    'registration.already.exists': 'Gost je vec prijavljen na ovaj dogadjaj.',
+    'guest.notfound': 'Gost nije pronadjen.',
+    'registration.notfound': 'Prijava za dogadjaj nije pronadjena.',
+  });
 }
 
 function buildEmailSummaryText(
@@ -126,30 +105,37 @@ function buildBulkEmailMessage(result: BulkInvitationSendResultDto) {
   return `${summary} ${details}`.trim();
 }
 
-function applyInvitationResults(
-  currentRegistrations: EventRegistrationDto[],
-  results: InvitationSendResultDto[]
+function buildEmailFailureReason(
+  registrationId: number,
+  registrations: EventRegistrationDto[],
+  fallbackMessage: string
 ) {
-  const resultByRegistrationId = new Map(
-    results
-      .filter((result) => typeof result.registrationId === 'number')
-      .map((result) => [result.registrationId as number, result])
+  return (
+    registrations.find((registration) => registration.id === registrationId)?.invitationErrorMessage ??
+    fallbackMessage
   );
+}
 
-  return currentRegistrations.map((registration) => {
-    const result = resultByRegistrationId.get(registration.id);
+function buildBulkEmailFailureDetails(
+  result: BulkInvitationSendResultDto,
+  registrations: EventRegistrationDto[]
+) {
+  const failedMessages = result.results
+    .filter((item) => !item.success && typeof item.registrationId === 'number')
+    .map((item) =>
+      buildEmailFailureReason(
+        item.registrationId as number,
+        registrations,
+        item.message || 'Email nije poslat.'
+      )
+    )
+    .filter(Boolean);
 
-    if (!result || !result.success) {
-      return registration;
-    }
+  if (failedMessages.length === 0) {
+    return 'Email nije poslat.';
+  }
 
-    return {
-      ...registration,
-      invitationStatus: 'SENT' as const,
-      invitationSentAt: result.sentAt ?? registration.invitationSentAt ?? new Date().toISOString(),
-      invitationErrorMessage: null,
-    };
-  });
+  return Array.from(new Set(failedMessages)).join(' ');
 }
 
 export function GuestsListPage() {
@@ -223,7 +209,7 @@ export function GuestsListPage() {
         setRegistrations(registrationsResponse);
         setEvent(selectedEventResponse);
       } catch (loadError) {
-        setError('Neuspesno ucitavanje gostiju i dogadjaja.');
+        setError(mapKnownApiError(loadError, 'Neuspesno ucitavanje gostiju i dogadjaja.'));
       } finally {
         setIsLoading(false);
       }
@@ -327,7 +313,7 @@ export function GuestsListPage() {
       );
       setSelectedGuestIds((currentIds) => currentIds.filter((guestId) => guestId !== id));
     } catch (deleteRequestError) {
-      setDeleteError(getApiErrorMessage(deleteRequestError, 'Brisanje gosta nije uspelo.'));
+      setDeleteError(mapKnownApiError(deleteRequestError, 'Brisanje gosta nije uspelo.'));
     } finally {
       setDeletingId(null);
     }
@@ -392,7 +378,7 @@ export function GuestsListPage() {
           : 'Gost je uspesno sacuvan.'
       );
     } catch (submitRequestError) {
-      setSubmitError(getApiErrorMessage(submitRequestError, 'Cuvanje gosta nije uspelo.'));
+      setSubmitError(mapKnownApiError(submitRequestError, 'Cuvanje gosta nije uspelo.'));
     } finally {
       setIsSubmitting(false);
     }
@@ -443,10 +429,23 @@ export function GuestsListPage() {
       setActionError(null);
       setActionSuccess(null);
       const result = await guestsApi.sendRegistrationEmail(eventId, registrationId);
+      const latestRegistrations = await guestsApi.getAllRegistrations();
+      setRegistrations(latestRegistrations);
+
+      if (!result.success) {
+        setActionError(
+          buildEmailFailureReason(
+            registrationId,
+            latestRegistrations,
+            result.message || 'Pojedinacno slanje emaila nije uspelo.'
+          )
+        );
+        return;
+      }
+
       setActionSuccess(buildEmailSummaryText([result], 'single'));
-      setRegistrations((currentRegistrations) => applyInvitationResults(currentRegistrations, [result]));
     } catch (sendError) {
-      setActionError(getApiErrorMessage(sendError, 'Pojedinacno slanje emaila nije uspelo.'));
+      setActionError(mapKnownApiError(sendError, 'Pojedinacno slanje emaila nije uspelo.'));
     } finally {
       setEmailSendingId(null);
     }
@@ -463,11 +462,17 @@ export function GuestsListPage() {
       setActionError(null);
       setActionSuccess(null);
       const result = await guestsApi.sendBulkRegistrationEmails(selectedRegistrationIds, subject, body);
+      const latestRegistrations = await guestsApi.getAllRegistrations();
+      setRegistrations(latestRegistrations);
       setBulkDialogOpen(false);
+
+      if (result.failedCount > 0) {
+        setActionError(buildBulkEmailFailureDetails(result, latestRegistrations));
+      }
+
       setActionSuccess(buildBulkEmailMessage(result));
-      setRegistrations((currentRegistrations) => applyInvitationResults(currentRegistrations, result.results));
     } catch (sendError) {
-      setBulkSendError(getApiErrorMessage(sendError, 'Grupno slanje emailova nije uspelo.'));
+      setBulkSendError(mapKnownApiError(sendError, 'Grupno slanje emailova nije uspelo.'));
     } finally {
       setIsSendingBulk(false);
     }
@@ -495,7 +500,7 @@ export function GuestsListPage() {
       );
     } catch (removeError) {
       setActionError(
-        getApiErrorMessage(removeError, 'Uklanjanje gosta sa dogadjaja nije uspelo.')
+        mapKnownApiError(removeError, 'Uklanjanje gosta sa dogadjaja nije uspelo.')
       );
     } finally {
       setUnregisteringRegistrationId(null);
@@ -507,7 +512,7 @@ export function GuestsListPage() {
       setActionError(null);
       await guestsApi.downloadRegistrationQrPng(registrationId);
     } catch (downloadError) {
-      setActionError(getApiErrorMessage(downloadError, 'Preuzimanje PNG QR koda nije uspelo.'));
+      setActionError(mapKnownApiError(downloadError, 'Preuzimanje PNG QR koda nije uspelo.'));
     }
   };
 
@@ -516,7 +521,7 @@ export function GuestsListPage() {
       setActionError(null);
       await guestsApi.downloadRegistrationTicketPdf(registrationId);
     } catch (downloadError) {
-      setActionError(getApiErrorMessage(downloadError, 'Preuzimanje PDF ulaznice nije uspelo.'));
+      setActionError(mapKnownApiError(downloadError, 'Preuzimanje PDF ulaznice nije uspelo.'));
     }
   };
 
@@ -541,7 +546,7 @@ export function GuestsListPage() {
       }
     } catch (downloadError) {
       setActionError(
-        getApiErrorMessage(
+        mapKnownApiError(
           downloadError,
           type === 'png'
             ? 'Grupno preuzimanje PNG QR kodova nije uspelo.'
@@ -570,7 +575,7 @@ export function GuestsListPage() {
       setRegistrations((currentRegistrations) => [createdRegistration, ...currentRegistrations]);
     } catch (registerRequestError) {
       setRegisterError(
-        getApiErrorMessage(registerRequestError, 'Prijava gosta na dogadjaj nije uspela.')
+        mapKnownApiError(registerRequestError, 'Prijava gosta na dogadjaj nije uspela.')
       );
     } finally {
       setIsRegistering(false);
